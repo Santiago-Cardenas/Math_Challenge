@@ -208,7 +208,7 @@ public class GameControllerGUI {
     }
 
     private void setAnswers (ArrayList<Integer> questionParts){
-        int placement = (int)(Math.random()*3);
+        int placement = (int)(Math.random()*4);
 
         switch (placement){
             case 0:

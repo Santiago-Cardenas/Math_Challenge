@@ -52,7 +52,6 @@ public class PlayerManager {
             }
         }
         else{
-            doesntExits=true;
             return null;
         }
         return current;
