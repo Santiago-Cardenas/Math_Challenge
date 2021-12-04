@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="75.0" fitWidth="126.0" layoutX="449.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../media/Math_Challenge.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="response" alignment="CENTER" layoutX="336.0" layoutY="285.0" prefHeight="87.0" prefWidth="180.0" textAlignment="JUSTIFY" wrapText="true">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <Button layoutX="300.0" layoutY="221.0" mnemonicParsing="false" onAction="#search_Player" prefHeight="37.0" prefWidth="94.0" text="SEARCH">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
+      <TextField fx:id="nickname_To_Search" layoutX="347.0" layoutY="180.0" />
+      <Label fx:id="OP1" layoutX="374.0" layoutY="143.0" text="Nickname">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <Button layoutX="449.0" layoutY="221.0" mnemonicParsing="false" onAction="#delete_Player" prefHeight="37.0" prefWidth="94.0" text="DELETE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
+      <TableView fx:id="topTC" layoutX="28.0" layoutY="113.0" prefHeight="200.0" prefWidth="226.0">
+        <columns>
+          <TableColumn fx:id="placementTC" prefWidth="75.0" text="PLACEMENT" />
+          <TableColumn fx:id="nicknameTC" prefWidth="75.0" text="NICKNAME" />
+            <TableColumn fx:id="scoreTC" prefWidth="75.0" text="SCORE" />
+        </columns>
+      </TableView>
+   </children>
+</Pane>
