@@ -74,5 +74,6 @@
             <Image url="@../../media/Math_Logo.jpg" />
          </image>
       </ImageView>
+      <Label fx:id="cronometerId" layoutX="456.0" layoutY="78.0" prefHeight="47.0" prefWidth="71.0" textAlignment="CENTER" />
    </children>
 </Pane>

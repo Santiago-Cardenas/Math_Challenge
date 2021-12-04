@@ -6,6 +6,15 @@ import java.util.ArrayList;
 public class PlayerManager {
     private ArrayList<Player> players;
     private Player root;
+    private boolean isDeleted = false;
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 
     public PlayerManager() {
         players = new ArrayList<Player>();
@@ -25,35 +34,47 @@ public class PlayerManager {
         }
         return true;
     }
-
-    public Player deletePlayer(Player current, String nickname) {
-        if(current!=null) {
-            if (current.getNickname().compareTo(nickname) == 0) {
-                if (current.getLeft() == null && current.getRight() == null) {
-                    return null;
-                } else if (current.getLeft() != null && current.getRight() != null) {
-                    Player aux = getMin(current.getRight());
-                    Player rightT = deletePlayer(current.getRight(), aux.getNickname());
-                    aux.setLeft(current.getLeft());
-                    aux.setRight(rightT);
-                    return aux;
-
-                } else if (current.getLeft() != null) {
-                    return current.getLeft();
-                } else {
-                    return current.getRight();
-                }
-            } else if (nickname.compareTo(current.getNickname()) < 0) {
-                Player leftT = deletePlayer(current.getLeft(), nickname);
-                current.setLeft(leftT);
-            } else {
-                Player newRightTree = deletePlayer(current.getRight(), nickname);
-                current.setRight(newRightTree);
-            }
+    public void triggerDelete(String nick) {
+        if (root != null){
+            root = deletePlayer(root, nick);
         }
+    }
+    public Player triggerSearch(String nick) {
+        return searchPlayer(root, nick);
+    }
+    public Player deletePlayer(Player current, String nick){
+        if (current.getNickname().compareTo(nick)==0){
+            if (current.getLeft() == null && current.getRight() == null){
+                return null;
+            } else if (current.getLeft() != null &&
+                    current.getRight() != null) {
+                Player successor = getMin(current.getRight());
+                Player newRightTree = deletePlayer(current.getRight(), successor.getNickname());
+
+                successor.setLeft(current.getLeft());
+                successor.setRight(newRightTree);
+
+                return successor;
+            } else if (current.getLeft() != null) {
+                return current.getLeft();
+            } else {
+                return current.getRight();
+            }
+
+        } else if (current.getNickname().compareTo(nick)<0){
+            Player newLeftTree = deletePlayer(current.getLeft(), nick);
+            current.setLeft(newLeftTree);
+        } else {
+            Player newRightTree = deletePlayer(current.getRight(), nick);
+            current.setRight(newRightTree);
+        }
+<<<<<<< HEAD
         else{
             return null;
         }
+=======
+
+>>>>>>> 5099d9767dbe432d65f9d79a78da5027ba7e862e
         return current;
     }
 
