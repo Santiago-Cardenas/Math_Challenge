@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class PlayerManager {
     private ArrayList<Player> players;
     private Player root;
-    private boolean doesntExits;
 
     public PlayerManager() {
         players = new ArrayList<Player>();
@@ -79,14 +78,6 @@ public class PlayerManager {
         } else {
             return getMin(current.getLeft());
         }
-    }
-
-    public boolean isDoesntExits() {
-        return doesntExits;
-    }
-
-    public void setDoesntExits(boolean doesntExits) {
-        this.doesntExits = doesntExits;
     }
 
     public Player getRoot() {
