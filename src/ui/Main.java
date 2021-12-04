@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.Cronometer;
 
 public class Main extends Application {
 
@@ -16,6 +17,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Start_Game.fxml"));
         GameControllerGUI controller = new GameControllerGUI();
+
         fxmlLoader.setController(controller);
         Parent root= fxmlLoader.load();
         Scene scene = new Scene(root);

@@ -11,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
+import model.Cronometer;
 import model.Player;
 import model.PlayerManager;
 import model.Questions_Generator;
@@ -21,9 +22,10 @@ import java.util.ArrayList;
 public class GameControllerGUI {
 
     private Questions_Generator questionsGenerator;
-
+    private Cronometer cronometer = new Cronometer(this);
     public GameControllerGUI() {
         questionsGenerator = new Questions_Generator();
+
     }
 
     @FXML
@@ -32,9 +34,14 @@ public class GameControllerGUI {
 
     @FXML
     private ImageView Math_Logo;
+    // ShowScore window
+    @FXML
+    private Label scoreLabel;
 
 
     // Question Window
+    @FXML
+    private Label cronometerId;
 
     @FXML
     private Label N1;
@@ -56,6 +63,7 @@ public class GameControllerGUI {
 
     @FXML
     private Label R4;
+
 
     @FXML
     private Label ProgressScore;
@@ -105,6 +113,8 @@ public class GameControllerGUI {
     private PlayerManager playerManager = new PlayerManager();
     private int answer;
     private int score;
+    private int tryy;
+    private String currentPlayer;
 
 
     public Stage getMainStage() {
@@ -137,36 +147,40 @@ public class GameControllerGUI {
         }
         else {
             playerManager.addPlayer(nicknameTxt.getText(), 0,0);
+            currentPlayer = nicknameTxt.getText();
+
             showQuestionWindow();
+            if(tryy==0){
+                cronometer.start();
+                tryy++;
+            }
+
         }
     }
 
     @FXML
     void next_Question(ActionEvent event) throws IOException {
         refreshScore();
+
         showQuestionWindow();
     }
 
     @FXML
     void delete_Player(ActionEvent event) {
-        String nickname = nickname_To_Search.getText();
-        Player playerDeleted = playerManager.deletePlayer(playerManager.getRoot(), nickname);
-        if(playerDeleted==null){
-            response.setText("There is no player with this nickname registered");
-        }
-        else {
-            response.setText(playerDeleted.getNickname() + " was deleted");
-        }
+
+        playerManager.triggerDelete(nickname_To_Search.getText());
+
+
     }
 
     @FXML
     void search_Player(ActionEvent event) {
         String nickname = nickname_To_Search.getText();
-        Player playerSearched = playerManager.searchPlayer(playerManager.getRoot(), nickname);
+        Player playerSearched = playerManager.triggerSearch(nickname);
         if(playerSearched==null){
             response.setText("There is no player with this nickname registered");
         }
-        else {
+        else if(playerSearched.getNickname().equals(nickname_To_Search.getText())){
             response.setText("The player " + nickname + " got a score of " + playerSearched.getScore() + " and is placed at " + playerSearched.getPlacement());
         }
     }
@@ -181,7 +195,10 @@ public class GameControllerGUI {
 
         mainStage.setScene(scene);
         mainStage.setTitle("Questions");
+
+
         mainStage.show();
+
     }
 
     public void showQuestions(){
@@ -208,7 +225,7 @@ public class GameControllerGUI {
     }
 
     private void setAnswers (ArrayList<Integer> questionParts){
-        int placement = (int)(Math.random()*3);
+        int placement = (int)(Math.random()*4);
 
         switch (placement){
             case 0:
@@ -283,4 +300,42 @@ public class GameControllerGUI {
         }
 
     }
+
+
+
+
+    public void refreshLabel(int i) throws IOException {
+        String numberCronometer = Integer.toString(i);
+        cronometerId.setText(numberCronometer);
+        if(numberCronometer.equals("0")){
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ShowScore.fxml"));
+            fxmlLoader.setController(this);
+            Parent root = fxmlLoader.load();
+            Scene scene = new Scene(root);
+
+
+            mainStage.setScene(scene);
+            mainStage.setTitle("");
+            Player player = playerManager.searchPlayer(playerManager.getRoot(),currentPlayer);
+            player.setScore(score);
+            scoreLabel.setText(Integer.toString(player.getScore()));
+            mainStage.show();
+        }
+    }
+
+    @FXML
+    void btnNext(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Tops_Window.fxml"));
+        fxmlLoader.setController(this);
+        Parent root = fxmlLoader.load();
+        Scene scene = new Scene(root);
+        mainStage.setScene(scene);
+        mainStage.setTitle("");
+        mainStage.show();
+    }
+
+
+
+
+
 }

@@ -17,7 +17,7 @@
             <Image url="@../../media/Math_Challenge.png" />
          </image>
       </ImageView>
-      <Label fx:id="response" alignment="CENTER" layoutX="336.0" layoutY="285.0" prefHeight="87.0" prefWidth="180.0" textAlignment="JUSTIFY" wrapText="true">
+      <Label fx:id="response" alignment="CENTER" layoutX="254.0" layoutY="274.0" prefHeight="112.0" prefWidth="334.0" textAlignment="JUSTIFY" wrapText="true">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -27,7 +27,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <TextField fx:id="nickname_To_Search" layoutX="347.0" layoutY="180.0" />
+      <TextField fx:id="nickname_To_Search" layoutX="328.0" layoutY="185.0" />
       <Label fx:id="OP1" layoutX="374.0" layoutY="143.0" text="Nickname">
          <font>
             <Font name="System Bold" size="20.0" />
