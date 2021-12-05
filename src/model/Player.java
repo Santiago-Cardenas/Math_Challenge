@@ -9,6 +9,9 @@ public class Player {
     private Player right;
     private Player left;
 
+    private Player scorePlus;
+    private Player scoreLess;
+
     public Player(String nickname, int score, int placement) {
         this.nickname = nickname;
         this.score = score;
@@ -17,7 +20,7 @@ public class Player {
 
     public boolean insert(Player newProgrammer){
 
-        if (newProgrammer.getNickname().compareTo(nickname) < 0 || newProgrammer.getNickname().compareTo(nickname) == 0 ) {
+        if (newProgrammer.getNickname().compareTo(nickname) < 0) {
             if (this.left == null) {
                 this.left = newProgrammer;
             } else {
@@ -25,6 +28,30 @@ public class Player {
             }
 
         } else if (newProgrammer.getNickname().compareTo(nickname) > 0) {
+
+            if (this.right == null) {
+                this.right = newProgrammer;
+            } else {
+                this.right.insert(newProgrammer);
+            }
+
+        } else {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean insertByScore(Player newProgrammer){
+
+        if (newProgrammer.getScore() < score) {
+            if (this.left == null) {
+                this.left = newProgrammer;
+            } else {
+                this.left.insert(newProgrammer);
+            }
+
+        } else if (newProgrammer.getScore() > score) {
 
             if (this.right == null) {
                 this.right = newProgrammer;
@@ -77,5 +104,21 @@ public class Player {
 
     public void setPlacement(int placement) {
         this.placement = placement;
+    }
+
+    public Player getScorePlus() {
+        return scorePlus;
+    }
+
+    public void setScorePlus(Player scorePlus) {
+        this.scorePlus = scorePlus;
+    }
+
+    public Player getScoreLess() {
+        return scoreLess;
+    }
+
+    public void setScoreLess(Player scoreLess) {
+        this.scoreLess = scoreLess;
     }
 }

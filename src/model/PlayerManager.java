@@ -4,20 +4,29 @@ import java.util.ArrayList;
 
 
 public class PlayerManager {
-    private ArrayList<Player> players;
+    private ArrayList<Player> playersScoreArray;
     private Player root;
-    private boolean isDeleted = false;
 
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
+    private Player scoreRoot;
 
     public PlayerManager() {
-        players = new ArrayList<Player>();
+        playersScoreArray = new ArrayList<Player>();
+    }
+
+    public Player triggerSearch(String nick) {
+        return searchPlayer(root, nick);
+    }
+
+    public void triggerDelete(String nick) {
+        if (root != null){
+            root = deletePlayer(root, nick);
+        }
+    }
+
+    public void triggerDeleteScore(String nick) {
+        if (scoreRoot != null){
+            scoreRoot = deletePlayer(scoreRoot, nick);
+        }
     }
 
     public boolean addPlayer(String nickname,int score,int placement) {
@@ -34,48 +43,49 @@ public class PlayerManager {
         }
         return true;
     }
-    public void triggerDelete(String nick) {
-        if (root != null){
-            root = deletePlayer(root, nick);
-        }
-    }
-    public Player triggerSearch(String nick) {
-        return searchPlayer(root, nick);
-    }
+
     public Player deletePlayer(Player current, String nick){
-        if (current.getNickname().compareTo(nick)==0){
-            if (current.getLeft() == null && current.getRight() == null){
-                return null;
-            } else if (current.getLeft() != null &&
-                    current.getRight() != null) {
-                Player successor = getMin(current.getRight());
-                Player newRightTree = deletePlayer(current.getRight(), successor.getNickname());
+            if (current.getNickname().compareTo(nick) == 0) {
+                if (current.getLeft() == null && current.getRight() == null) {
+                    return null;
+                } else if (current.getLeft() != null &&
+                        current.getRight() != null) {
+                    Player successor = getMin(current.getRight());
+                    Player newRightTree = deletePlayer(current.getRight(), successor.getNickname());
 
-                successor.setLeft(current.getLeft());
-                successor.setRight(newRightTree);
+                    successor.setLeft(current.getLeft());
+                    successor.setRight(newRightTree);
+                    return successor;
+                } else if (current.getLeft() != null) {
+                    return current.getLeft();
+                } else {
+                    return current.getRight();
+                }
 
-                return successor;
-            } else if (current.getLeft() != null) {
-                return current.getLeft();
+            } else if (current.getNickname().compareTo(nick) < 0) {
+                Player newLeftTree = deletePlayer(current.getLeft(), nick);
+                current.setLeft(newLeftTree);
             } else {
-                return current.getRight();
+                Player newRightTree = deletePlayer(current.getRight(), nick);
+                current.setRight(newRightTree);
             }
 
-        } else if (current.getNickname().compareTo(nick)<0){
-            Player newLeftTree = deletePlayer(current.getLeft(), nick);
-            current.setLeft(newLeftTree);
-        } else {
-            Player newRightTree = deletePlayer(current.getRight(), nick);
-            current.setRight(newRightTree);
-        }
-<<<<<<< HEAD
-        else{
-            return null;
-        }
-=======
-
->>>>>>> 5099d9767dbe432d65f9d79a78da5027ba7e862e
         return current;
+    }
+
+    private void addTops(String nickname,int score,int placement) {
+        Player playerScores = new Player(nickname,score,placement);
+        if (scoreRoot == null) {
+            scoreRoot = playerScores;
+        } else {
+            scoreRoot.insertByScore(playerScores);
+        }
+    }
+
+    public void refreshScore(String nickname,int score){
+        triggerDelete(nickname);
+        addPlayer(nickname,score,playersScoreArray.size()+1);
+        addTops(nickname,score,playersScoreArray.size()+1);
     }
 
     public Player searchPlayer(Player node, String name) {
@@ -104,7 +114,24 @@ public class PlayerManager {
         return root;
     }
 
+    public void triggerInorder() {
+        inorder(scoreRoot);
+    }
+
+    // Recursivo
+    public void inorder(Player playerScore) {
+        // Caso base
+        if (playerScore == null) {
+            return;
+        }
+        // Recursivo
+        inorder(playerScore.getScoreLess());
+        playersScoreArray.add(playerScore);
+        inorder(playerScore.getScorePlus());
+    }
+
+
     public ArrayList<Player> getPlayers() {
-        return players;
+        return playersScoreArray;
     }
 }

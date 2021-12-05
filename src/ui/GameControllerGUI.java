@@ -113,7 +113,7 @@ public class GameControllerGUI {
     private PlayerManager playerManager = new PlayerManager();
     private int answer;
     private int score;
-    private int tryy;
+    private int tries;
     private String currentPlayer;
 
 
@@ -131,9 +131,9 @@ public class GameControllerGUI {
         observableList = FXCollections.observableArrayList(playerManager.getPlayers());
 
         topTC.setItems(observableList);
-        placementTC.setCellValueFactory(new PropertyValueFactory<Player,Integer>("PLACEMENT"));
-        nicknameTC.setCellValueFactory(new PropertyValueFactory<Player,String>("NICKNAME"));
-        scoreTC.setCellValueFactory(new PropertyValueFactory<Player,Integer>("SCORE"));
+        placementTC.setCellValueFactory(new PropertyValueFactory<Player,Integer>("placement"));
+        nicknameTC.setCellValueFactory(new PropertyValueFactory<Player,String>("nickname"));
+        scoreTC.setCellValueFactory(new PropertyValueFactory<Player,Integer>("score"));
     }
 
     @FXML
@@ -150,9 +150,9 @@ public class GameControllerGUI {
             currentPlayer = nicknameTxt.getText();
 
             showQuestionWindow();
-            if(tryy==0){
+            if(tries==0){
                 cronometer.start();
-                tryy++;
+                tries++;
             }
 
         }
@@ -167,10 +167,14 @@ public class GameControllerGUI {
 
     @FXML
     void delete_Player(ActionEvent event) {
-
-        playerManager.triggerDelete(nickname_To_Search.getText());
-
-
+        Player isOnList = playerManager.triggerSearch(nickname_To_Search.getText());
+        if(isOnList!=null){
+            playerManager.triggerDelete(nickname_To_Search.getText());
+            response.setText("The player " + nickname_To_Search.getText() + " was deleted");
+        }
+        else{
+            response.setText("There is no player with this nickname registered");
+        }
     }
 
     @FXML
@@ -313,25 +317,28 @@ public class GameControllerGUI {
             Parent root = fxmlLoader.load();
             Scene scene = new Scene(root);
 
-
+            playerManager.refreshScore(currentPlayer,score);
             mainStage.setScene(scene);
             mainStage.setTitle("");
-            Player player = playerManager.searchPlayer(playerManager.getRoot(),currentPlayer);
-            player.setScore(score);
-            scoreLabel.setText(Integer.toString(player.getScore()));
+            scoreLabel.setText(Integer.toString(score));
             mainStage.show();
         }
     }
 
     @FXML
     void btnNext(ActionEvent event) throws IOException {
+        playerManager.triggerInorder();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Tops_Window.fxml"));
         fxmlLoader.setController(this);
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
+
+
+        System.out.println(playerManager.getPlayers().size());
         mainStage.setScene(scene);
         mainStage.setTitle("");
         mainStage.show();
+        initializeTableView();
     }
 
 
