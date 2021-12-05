@@ -5,22 +5,22 @@ import ui.GameControllerGUI;
 
 import java.io.IOException;
 
-public class Cronometer extends Thread{
+public class Chronometer extends Thread{
 
-    private GameControllerGUI gameControll;
+    private GameControllerGUI gameControl;
 
 
-    public Cronometer(GameControllerGUI gameControll){
-        this.gameControll = gameControll;
-
+    public Chronometer(GameControllerGUI gameControl){
+        this.gameControl = gameControl;
     }
+
     @Override
     public void run(){
-        for(int i=5 ; i>=0 ; i--)   {
+        for(int i=30 ; i>=0 ; i--)   {
             int finalI = i;
             Platform.runLater(() ->{
                 try {
-                    gameControll.refreshLabel(finalI);
+                    gameControl.refreshLabel(finalI);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -32,7 +32,6 @@ public class Cronometer extends Thread{
                 e.printStackTrace();
             }
         }
-
-
+        
     }
 }

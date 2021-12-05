@@ -11,7 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
-import model.Cronometer;
+import model.Chronometer;
 import model.Player;
 import model.PlayerManager;
 import model.Questions_Generator;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class GameControllerGUI {
 
     private Questions_Generator questionsGenerator;
-    private Cronometer cronometer = new Cronometer(this);
+    private Chronometer chronometer = new Chronometer(this);
     public GameControllerGUI() {
         questionsGenerator = new Questions_Generator();
 
@@ -151,7 +151,7 @@ public class GameControllerGUI {
 
             showQuestionWindow();
             if(tries==0){
-                cronometer.start();
+                chronometer.start();
                 tries++;
             }
 
@@ -161,16 +161,24 @@ public class GameControllerGUI {
     @FXML
     void next_Question(ActionEvent event) throws IOException {
         refreshScore();
-
         showQuestionWindow();
     }
 
     @FXML
     void delete_Player(ActionEvent event) {
-        Player isOnList = playerManager.triggerSearch(nickname_To_Search.getText());
+        String nickname = nickname_To_Search.getText();
+        Player isOnList = playerManager.triggerSearch(nickname);
+        Player isOnScoreList = playerManager.triggerSearchScore(nickname);
+
         if(isOnList!=null){
-            playerManager.triggerDelete(nickname_To_Search.getText());
-            response.setText("The player " + nickname_To_Search.getText() + " was deleted");
+            playerManager.triggerDelete(nickname);
+            if(isOnScoreList!=null) {
+                playerManager.triggerDeleteScore(nickname);
+            }
+            response.setText("The player " + nickname + " was deleted");
+            playerManager.removePlayer(nickname);
+            initializeTableView();
+            topTC.refresh();
         }
         else{
             response.setText("There is no player with this nickname registered");
@@ -185,7 +193,7 @@ public class GameControllerGUI {
             response.setText("There is no player with this nickname registered");
         }
         else if(playerSearched.getNickname().equals(nickname_To_Search.getText())){
-            response.setText("The player " + nickname + " got a score of " + playerSearched.getScore() + " and is placed at " + playerSearched.getPlacement());
+            response.setText("The player " + nickname + " got a score of " + playerSearched.getScore());
         }
     }
 
@@ -305,13 +313,10 @@ public class GameControllerGUI {
 
     }
 
-
-
-
     public void refreshLabel(int i) throws IOException {
-        String numberCronometer = Integer.toString(i);
-        cronometerId.setText(numberCronometer);
-        if(numberCronometer.equals("0")){
+        String numberChronometer = Integer.toString(i) + " Seconds";
+        cronometerId.setText(numberChronometer);
+        if(numberChronometer.equals("0 Seconds")){
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ShowScore.fxml"));
             fxmlLoader.setController(this);
             Parent root = fxmlLoader.load();
@@ -340,9 +345,5 @@ public class GameControllerGUI {
         mainStage.show();
         initializeTableView();
     }
-
-
-
-
 
 }

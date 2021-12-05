@@ -14,7 +14,7 @@
    <children>
       <ImageView fitHeight="75.0" fitWidth="126.0" layoutX="449.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../media/Math_Challenge.png" />
+            <Image url="file:/C:/Users/santi/OneDrive/Documentos/APO_II/Math_Challenge/media/Math_Logo.jpg" />
          </image>
       </ImageView>
       <Label fx:id="response" alignment="CENTER" layoutX="254.0" layoutY="274.0" prefHeight="112.0" prefWidth="334.0" textAlignment="JUSTIFY" wrapText="true">
@@ -45,5 +45,10 @@
             <TableColumn fx:id="scoreTC" prefWidth="75.0" text="SCORE" />
         </columns>
       </TableView>
+      <Label fx:id="OP11" layoutX="75.0" layoutY="62.0" text="SCOREBOARD">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
    </children>
 </Pane>
