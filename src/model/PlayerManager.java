@@ -109,8 +109,8 @@ public class PlayerManager {
 
     public void refreshScore(String nickname,int score){
         triggerDelete(nickname);
-        addPlayer(nickname, score, playersScoreArray.size() + 1);
-        addTops(nickname, score, playersScoreArray.size() + 1);
+        addPlayer(nickname, score, 0);
+        addTops(nickname, score, 0);
     }
 
     public Player getMin(Player current) {
