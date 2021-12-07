@@ -12,7 +12,7 @@
    <children>
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="199.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="file:/C:/Users/santi/OneDrive/Documentos/APO_II/Math_Challenge/media/Math_Logo.jpg" />
+            <Image url="@../../media/Math_Challenge.png" />
          </image>
       </ImageView>
       <Button layoutX="249.0" layoutY="271.0" mnemonicParsing="false" onAction="#go_To_Questions" prefHeight="47.0" prefWidth="100.0" text="PLAY">

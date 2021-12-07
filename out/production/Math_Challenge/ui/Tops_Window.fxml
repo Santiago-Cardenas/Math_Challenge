@@ -49,10 +49,14 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Label layoutX="10.0" layoutY="148.0" text="1" />
+      <Label layoutX="10.0" layoutY="148.0" text="1">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
       <Label layoutX="10.0" layoutY="178.0" text="2" />
-      <Label layoutX="10.0" layoutY="211.0" text="3" />
-      <Label layoutX="10.0" layoutY="240.0" text="4" />
-      <Label layoutX="10.0" layoutY="270.0" text="5" />
+      <Label layoutX="10.0" layoutY="210.0" text="3" />
+      <Label layoutX="10.0" layoutY="239.0" text="4" />
+      <Label layoutX="10.0" layoutY="269.0" text="5" />
    </children>
 </Pane>
