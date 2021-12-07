@@ -1,10 +1,11 @@
-package ui;
+package main;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ui.GameControllerGUI;
 
 public class Main extends Application {
 
