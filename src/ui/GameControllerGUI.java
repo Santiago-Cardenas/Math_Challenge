@@ -23,8 +23,10 @@ public class GameControllerGUI {
 
     private Questions_Generator questionsGenerator;
     private Chronometer chronometer = new Chronometer(this);
-    public GameControllerGUI() {
+    public GameControllerGUI() throws IOException {
         questionsGenerator = new Questions_Generator();
+        playerManager = new PlayerManager();
+        playerManager.importData();
 
     }
 
@@ -110,7 +112,7 @@ public class GameControllerGUI {
 
     private Stage mainStage;
 
-    private PlayerManager playerManager = new PlayerManager();
+    private PlayerManager playerManager;
     private int answer;
     private int score;
     private int tries;
@@ -165,7 +167,7 @@ public class GameControllerGUI {
     }
 
     @FXML
-    void delete_Player(ActionEvent event) {
+    void delete_Player(ActionEvent event) throws IOException {
         String nickname = nickname_To_Search.getText();
         Player isOnList = playerManager.triggerSearch(nickname);
         Player isOnScoreList = playerManager.triggerSearchScore(nickname);
@@ -179,6 +181,7 @@ public class GameControllerGUI {
             playerManager.removePlayer(nickname);
             initializeTableView();
             topTC.refresh();
+            playerManager.exportData();
         }
         else{
             response.setText("There is no player with this nickname registered");
@@ -344,6 +347,7 @@ public class GameControllerGUI {
         mainStage.setTitle("");
         mainStage.show();
         initializeTableView();
+        playerManager.exportData();
     }
 
 }

@@ -1,12 +1,17 @@
 package model;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlayerManager {
     private ArrayList<Player> playersScoreArray;
     private Player root;
-
     private Player scoreRoot;
+    private String FILE_DATA_PATH = "data/Users";
+    private int totalPlayers;
 
     public PlayerManager() {
         playersScoreArray = new ArrayList<Player>();
@@ -36,12 +41,14 @@ public class PlayerManager {
         Player newPlayer = new Player(nickname,score,placement);
         if (root == null) {
             root = newPlayer;
+            totalPlayers++;
         } else {
             if(root.insert(newPlayer)==false){
                 return false;
             }
             else {
                 root.insert(newPlayer);
+                totalPlayers++;
             }
         }
         return true;
@@ -71,29 +78,31 @@ public class PlayerManager {
     }
 
     public Player deletePlayer(Player current, String nick){
-        if (current.getNickname().compareTo(nick) == 0) {
-            if (current.getLeft() == null && current.getRight() == null) {
-                return null;
-            } else if (current.getLeft() != null &&
-                    current.getRight() != null) {
-                Player successor = getMin(current.getRight());
-                Player newRightTree = deletePlayer(current.getRight(), successor.getNickname());
+        if(current!=null) {
+            if (current.getNickname().compareTo(nick) == 0) {
+                if (current.getLeft() == null && current.getRight() == null) {
+                    return null;
+                } else if (current.getLeft() != null &&
+                        current.getRight() != null) {
+                    Player successor = getMin(current.getRight());
+                    Player newRightTree = deletePlayer(current.getRight(), successor.getNickname());
 
-                successor.setLeft(current.getLeft());
-                successor.setRight(newRightTree);
-                return successor;
-            } else if (current.getLeft() != null) {
-                return current.getLeft();
+                    successor.setLeft(current.getLeft());
+                    successor.setRight(newRightTree);
+                    return successor;
+                } else if (current.getLeft() != null) {
+                    return current.getLeft();
+                } else {
+                    return current.getRight();
+                }
+
+            } else if (current.getNickname().compareTo(nick) < 0) {
+                Player newLeftTree = deletePlayer(current.getLeft(), nick);
+                current.setLeft(newLeftTree);
             } else {
-                return current.getRight();
+                Player newRightTree = deletePlayer(current.getRight(), nick);
+                current.setRight(newRightTree);
             }
-
-        } else if (current.getNickname().compareTo(nick) < 0) {
-            Player newLeftTree = deletePlayer(current.getLeft(), nick);
-            current.setLeft(newLeftTree);
-        } else {
-            Player newRightTree = deletePlayer(current.getRight(), nick);
-            current.setRight(newRightTree);
         }
 
         return current;
@@ -108,9 +117,21 @@ public class PlayerManager {
     }
 
     public void refreshScore(String nickname,int score){
-        triggerDelete(nickname);
-        addPlayer(nickname, score, 0);
+        searchPlayerAndRefreshScore(root,nickname,score);
         addTops(nickname, score, 0);
+    }
+
+    public void searchPlayerAndRefreshScore(Player node, String name,int score) {
+        if (node != null) {
+            if (node.getNickname().compareTo(name) == 0) {
+                node.setScore(score);
+            }
+            if (name.compareTo(node.getNickname()) < 0) {
+                searchPlayerAndRefreshScore(node.getLeft(), name, score);
+            } else {
+                searchPlayerAndRefreshScore(node.getRight(), name, score);
+            }
+        }
     }
 
     public Player getMin(Player current) {
@@ -140,6 +161,43 @@ public class PlayerManager {
         inorder(playerScore.getScorePlus(),tries);
     }
 
+    public void triggerInorderExport(FileWriter fw) throws IOException {
+        inorderExport(scoreRoot, fw);
+    }
+
+    public void inorderExport(Player current, FileWriter fw) throws IOException {
+
+        if (current == null) {
+            return;
+        }
+
+        inorderExport(current.getLeft(),fw);
+        fw.write(current.getNickname() + "|" + current.getScore() + "|" + current.getPlacement() + "\n");
+        inorderExport(current.getRight(),fw);
+    }
+
+    public void importData() throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(FILE_DATA_PATH));
+        String line = br.readLine();
+        while (line != null) {
+            String[] parts = line.split("\\|");
+            String nickname = parts[0];
+            int score = Integer.parseInt(parts[1]);
+            int placement = Integer.parseInt(parts[2]);
+
+            addPlayer(nickname,score,placement);
+            addTops(nickname,score,placement);
+
+            line = br.readLine();
+        }
+        br.close();
+    }
+
+    public void exportData() throws IOException {
+        FileWriter fw = new FileWriter(FILE_DATA_PATH,false);
+        triggerInorderExport(fw);
+        fw.close();
+    }
 
     public ArrayList<Player> getPlayers() {
         return playersScoreArray;

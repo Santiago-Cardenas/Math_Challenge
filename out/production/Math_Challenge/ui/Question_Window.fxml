@@ -74,9 +74,9 @@
             <Image url="file:/C:/Users/santi/OneDrive/Documentos/APO_II/Math_Challenge/media/Math_Logo.jpg" />
          </image>
       </ImageView>
-      <Label fx:id="cronometerId" alignment="CENTER" layoutX="427.0" layoutY="78.0" prefHeight="47.0" prefWidth="128.0" textAlignment="JUSTIFY">
+      <Label fx:id="cronometerId" alignment="CENTER" layoutX="407.0" layoutY="78.0" prefHeight="47.0" prefWidth="169.0" textAlignment="JUSTIFY">
          <font>
-            <Font name="System Bold" size="25.0" />
+            <Font name="System Bold" size="22.0" />
          </font></Label>
       <Label layoutX="443.0" layoutY="46.0" text="TIME LEFT">
          <font>
