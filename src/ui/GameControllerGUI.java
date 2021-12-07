@@ -23,10 +23,8 @@ public class GameControllerGUI {
 
     private Questions_Generator questionsGenerator;
     private Chronometer chronometer = new Chronometer(this);
-    public GameControllerGUI() throws IOException {
+    public GameControllerGUI() {
         questionsGenerator = new Questions_Generator();
-        playerManager = new PlayerManager();
-        playerManager.importData();
 
     }
 
@@ -100,9 +98,6 @@ public class GameControllerGUI {
     private TableView<Player> topTC;
 
     @FXML
-    private TableColumn<Player, Integer> placementTC;
-
-    @FXML
     private TableColumn<Player, String> nicknameTC;
 
     @FXML
@@ -112,7 +107,7 @@ public class GameControllerGUI {
 
     private Stage mainStage;
 
-    private PlayerManager playerManager;
+    private PlayerManager playerManager = new PlayerManager();
     private int answer;
     private int score;
     private int tries;
@@ -133,24 +128,24 @@ public class GameControllerGUI {
         observableList = FXCollections.observableArrayList(playerManager.getPlayers());
 
         topTC.setItems(observableList);
-        placementTC.setCellValueFactory(new PropertyValueFactory<Player,Integer>("placement"));
         nicknameTC.setCellValueFactory(new PropertyValueFactory<Player,String>("nickname"));
         scoreTC.setCellValueFactory(new PropertyValueFactory<Player,Integer>("score"));
     }
 
     @FXML
     void go_To_Questions(ActionEvent event) throws IOException {
+        currentPlayer = nicknameTxt.getText();
 
-        if(playerManager.addPlayer(nicknameTxt.getText(), 0,0)==false){
+        Player player = playerManager.searchPlayer(playerManager.getRoot() , currentPlayer);
+
+        if(player!=null){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning 000");
             alert.setHeaderText(null);
             alert.setContentText("This nickname is already on use!");
+            alert.show();
         }
         else {
-            playerManager.addPlayer(nicknameTxt.getText(), 0,0);
-            currentPlayer = nicknameTxt.getText();
-
             showQuestionWindow();
             if(tries==0){
                 chronometer.start();
@@ -167,7 +162,7 @@ public class GameControllerGUI {
     }
 
     @FXML
-    void delete_Player(ActionEvent event) throws IOException {
+    void delete_Player(ActionEvent event) {
         String nickname = nickname_To_Search.getText();
         Player isOnList = playerManager.triggerSearch(nickname);
         Player isOnScoreList = playerManager.triggerSearchScore(nickname);
@@ -179,11 +174,12 @@ public class GameControllerGUI {
             }
             response.setText("The player " + nickname + " was deleted");
             playerManager.removePlayer(nickname);
+            playerManager.triggerInorder();
             initializeTableView();
             topTC.refresh();
-            playerManager.exportData();
-        }
-        else{
+            playerManager.savePlayerScore();
+            playerManager.savePlayerName();
+        } else {
             response.setText("There is no player with this nickname registered");
         }
     }
@@ -325,7 +321,6 @@ public class GameControllerGUI {
             Parent root = fxmlLoader.load();
             Scene scene = new Scene(root);
 
-            playerManager.refreshScore(currentPlayer,score);
             mainStage.setScene(scene);
             mainStage.setTitle("");
             scoreLabel.setText(Integer.toString(score));
@@ -335,19 +330,27 @@ public class GameControllerGUI {
 
     @FXML
     void btnNext(ActionEvent event) throws IOException {
-        playerManager.triggerInorder();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Tops_Window.fxml"));
         fxmlLoader.setController(this);
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
 
+        //Crear jugador
+        Player player = playerManager.addPlayer(currentPlayer, score);
+        playerManager.addTops(player);
 
-        System.out.println(playerManager.getPlayers().size());
+        //Guardar jugadores
+        playerManager.savePlayerName();
+        playerManager.savePlayerScore();
+        playerManager.setScoreRoot(playerManager.loadPlayerScore());
+        playerManager.setRoot(playerManager.loadPlayerName());
+
+        playerManager.triggerInorder();
+
         mainStage.setScene(scene);
         mainStage.setTitle("");
         mainStage.show();
         initializeTableView();
-        playerManager.exportData();
     }
 
 }
