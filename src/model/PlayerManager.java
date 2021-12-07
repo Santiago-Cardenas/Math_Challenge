@@ -85,11 +85,11 @@ public class PlayerManager {
             }
 
         } else if (current.getNickname().compareTo(nickname) < 0) {
-            Player newLeftTree = deletePlayer(current.getLeft(), nickname);
-            current.setLeft(newLeftTree);
-        } else {
             Player newRightTree = deletePlayer(current.getRight(), nickname);
             current.setRight(newRightTree);
+        } else {
+            Player newLeftTree = deletePlayer(current.getLeft(), nickname);
+            current.setLeft(newLeftTree);
         }
 
         return current;
@@ -112,16 +112,19 @@ public class PlayerManager {
     }
 
     public void triggerInorder() {
-        inorder(scoreRoot);
+        inorder(scoreRoot,0);
     }
 
-    public void inorder(Player playerScore) {
+    public void inorder(Player playerScore, int top) {
         if (playerScore == null) {
             return;
         }
-        inorder(playerScore.getScorePlus());
-        playersScoreArray.add(playerScore);
-        inorder(playerScore.getScoreLess());
+        inorder(playerScore.getScorePlus(),top);
+        if(top<5) {
+            top++;
+            playersScoreArray.add(playerScore);
+        }
+        inorder(playerScore.getScoreLess(),top);
     }
 
     public ArrayList<Player> getPlayers() {

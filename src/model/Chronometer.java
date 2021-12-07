@@ -15,7 +15,7 @@ public class Chronometer extends Thread{
 
     @Override
     public void run(){
-        for(int i=1 ; i>=0 ; i--)   {
+        for(int i=30 ; i>=0 ; i--)   {
             int finalI = i;
             Platform.runLater(() ->{
                 try {

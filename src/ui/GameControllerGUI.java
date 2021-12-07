@@ -98,9 +98,6 @@ public class GameControllerGUI {
     private TableView<Player> topTC;
 
     @FXML
-    private TableColumn<Player, Integer> placementTC;
-
-    @FXML
     private TableColumn<Player, String> nicknameTC;
 
     @FXML
@@ -128,13 +125,9 @@ public class GameControllerGUI {
     }
 
     private void initializeTableView() {
-        for (int i = 0; i < playerManager.getPlayers().size(); i++) {
-            System.out.println(playerManager.getPlayers().get(i).getNickname());
-        }
         observableList = FXCollections.observableArrayList(playerManager.getPlayers());
 
         topTC.setItems(observableList);
-        placementTC.setCellValueFactory(new PropertyValueFactory<Player,Integer>("placement"));
         nicknameTC.setCellValueFactory(new PropertyValueFactory<Player,String>("nickname"));
         scoreTC.setCellValueFactory(new PropertyValueFactory<Player,Integer>("score"));
     }
@@ -150,6 +143,7 @@ public class GameControllerGUI {
             alert.setTitle("Warning 000");
             alert.setHeaderText(null);
             alert.setContentText("This nickname is already on use!");
+            alert.show();
         }
         else {
             showQuestionWindow();
@@ -180,6 +174,7 @@ public class GameControllerGUI {
             }
             response.setText("The player " + nickname + " was deleted");
             playerManager.removePlayer(nickname);
+            playerManager.triggerInorder();
             initializeTableView();
             topTC.refresh();
             playerManager.savePlayerScore();

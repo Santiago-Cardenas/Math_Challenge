@@ -40,9 +40,8 @@
       </Button>
       <TableView fx:id="topTC" layoutX="28.0" layoutY="113.0" prefHeight="200.0" prefWidth="226.0">
         <columns>
-          <TableColumn fx:id="placementTC" prefWidth="75.0" text="PLACEMENT" />
-          <TableColumn fx:id="nicknameTC" prefWidth="75.0" text="NICKNAME" />
-            <TableColumn fx:id="scoreTC" prefWidth="75.0" text="SCORE" />
+            <TableColumn fx:id="scoreTC" prefWidth="113.0" text="SCORE" />
+          <TableColumn fx:id="nicknameTC" prefWidth="112.0" text="NICKNAME" />
         </columns>
       </TableView>
       <Label fx:id="OP11" layoutX="75.0" layoutY="62.0" text="SCOREBOARD">
