@@ -16,7 +16,7 @@ public class Player implements Serializable {
     public Player(String nickname, int score) {
         this.nickname = nickname;
         this.score = score;
-    }
+    }  //
 
     public void insert(Player newProgrammer){
         if (newProgrammer.getNickname().compareTo(nickname) < 0) {
@@ -32,7 +32,7 @@ public class Player implements Serializable {
                 this.right.insert(newProgrammer);
             }
         }
-    }
+    }  //
 
     public void insertByScore(Player player){
         if (player.getScore() < score) {
@@ -54,11 +54,11 @@ public class Player implements Serializable {
                 this.scoreLess.insertByScore(player);
             }
         }
-    }
+    } //
 
     public Player getRight() {
         return right;
-    }
+    } //
 
     public void setRight(Player right) {
         this.right = right;
