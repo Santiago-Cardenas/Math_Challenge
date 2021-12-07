@@ -128,6 +128,9 @@ public class GameControllerGUI {
     }
 
     private void initializeTableView() {
+        for (int i = 0; i < playerManager.getPlayers().size(); i++) {
+            System.out.println(playerManager.getPlayers().get(i).getNickname());
+        }
         observableList = FXCollections.observableArrayList(playerManager.getPlayers());
 
         topTC.setItems(observableList);
@@ -138,17 +141,17 @@ public class GameControllerGUI {
 
     @FXML
     void go_To_Questions(ActionEvent event) throws IOException {
+        currentPlayer = nicknameTxt.getText();
 
-        if(playerManager.addPlayer(nicknameTxt.getText(), 0,0)==false){
+        Player player = playerManager.searchPlayer(playerManager.getRoot() , currentPlayer);
+
+        if(player!=null){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning 000");
             alert.setHeaderText(null);
             alert.setContentText("This nickname is already on use!");
         }
         else {
-            playerManager.addPlayer(nicknameTxt.getText(), 0,0);
-            currentPlayer = nicknameTxt.getText();
-
             showQuestionWindow();
             if(tries==0){
                 chronometer.start();
@@ -179,8 +182,9 @@ public class GameControllerGUI {
             playerManager.removePlayer(nickname);
             initializeTableView();
             topTC.refresh();
-        }
-        else{
+            playerManager.savePlayerScore();
+            playerManager.savePlayerName();
+        } else {
             response.setText("There is no player with this nickname registered");
         }
     }
@@ -322,7 +326,6 @@ public class GameControllerGUI {
             Parent root = fxmlLoader.load();
             Scene scene = new Scene(root);
 
-            playerManager.refreshScore(currentPlayer,score);
             mainStage.setScene(scene);
             mainStage.setTitle("");
             scoreLabel.setText(Integer.toString(score));
@@ -332,14 +335,23 @@ public class GameControllerGUI {
 
     @FXML
     void btnNext(ActionEvent event) throws IOException {
-        playerManager.triggerInorder();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Tops_Window.fxml"));
         fxmlLoader.setController(this);
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
 
+        //Crear jugador
+        Player player = playerManager.addPlayer(currentPlayer, score);
+        playerManager.addTops(player);
 
-        System.out.println(playerManager.getPlayers().size());
+        //Guardar jugadores
+        playerManager.savePlayerName();
+        playerManager.savePlayerScore();
+        playerManager.setScoreRoot(playerManager.loadPlayerScore());
+        playerManager.setRoot(playerManager.loadPlayerName());
+
+        playerManager.triggerInorder();
+
         mainStage.setScene(scene);
         mainStage.setTitle("");
         mainStage.show();

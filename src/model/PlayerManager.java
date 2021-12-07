@@ -1,15 +1,17 @@
 package model;
 
+import java.io.*;
 import java.util.ArrayList;
 
 public class PlayerManager {
     private ArrayList<Player> playersScoreArray;
     private Player root;
-
     private Player scoreRoot;
 
     public PlayerManager() {
         playersScoreArray = new ArrayList<Player>();
+        this.root = loadPlayerName();
+        this.scoreRoot = loadPlayerScore();
     }
 
     public Player triggerSearch(String nick) {
@@ -20,39 +22,33 @@ public class PlayerManager {
         return searchPlayer(scoreRoot, nick);
     }
 
-    public void triggerDelete(String nick) {
+    public void triggerDelete(String nickname) {
         if (root != null){
-            root = deletePlayer(root, nick);
+            root = deletePlayer(root, nickname);
         }
     }
 
-    public void triggerDeleteScore(String nick) {
+    public void triggerDeleteScore(String nickname) {
         if (scoreRoot != null){
-            scoreRoot = deletePlayer(scoreRoot, nick);
+            scoreRoot = deletePlayer(scoreRoot, nickname);
         }
     }
 
-    public boolean addPlayer(String nickname,int score,int placement) {
-        Player newPlayer = new Player(nickname,score,placement);
+    public Player addPlayer(String nickname,int score) {
+        Player newPlayer = new Player(nickname,score);
         if (root == null) {
             root = newPlayer;
         } else {
-            if(root.insert(newPlayer)==false){
-                return false;
-            }
-            else {
-                root.insert(newPlayer);
-            }
+            root.insert(newPlayer);
         }
-        return true;
+        return newPlayer;
     }
 
-    private void addTops(String nickname,int score,int placement) {
-        Player playerScores = new Player(nickname,score,placement);
+    public void addTops(Player player) {
         if (scoreRoot == null) {
-            scoreRoot = playerScores;
+            scoreRoot = player;
         } else {
-            scoreRoot.insertByScore(playerScores);
+            scoreRoot.insertByScore(player);
         }
     }
 
@@ -70,8 +66,8 @@ public class PlayerManager {
         }
     }
 
-    public Player deletePlayer(Player current, String nick){
-        if (current.getNickname().compareTo(nick) == 0) {
+    public Player deletePlayer(Player current, String nickname){
+        if (current.getNickname().compareTo(nickname) == 0) {
             if (current.getLeft() == null && current.getRight() == null) {
                 return null;
             } else if (current.getLeft() != null &&
@@ -88,11 +84,11 @@ public class PlayerManager {
                 return current.getRight();
             }
 
-        } else if (current.getNickname().compareTo(nick) < 0) {
-            Player newLeftTree = deletePlayer(current.getLeft(), nick);
+        } else if (current.getNickname().compareTo(nickname) < 0) {
+            Player newLeftTree = deletePlayer(current.getLeft(), nickname);
             current.setLeft(newLeftTree);
         } else {
-            Player newRightTree = deletePlayer(current.getRight(), nick);
+            Player newRightTree = deletePlayer(current.getRight(), nickname);
             current.setRight(newRightTree);
         }
 
@@ -107,12 +103,6 @@ public class PlayerManager {
         }
     }
 
-    public void refreshScore(String nickname,int score){
-        triggerDelete(nickname);
-        addPlayer(nickname, score, 0);
-        addTops(nickname, score, 0);
-    }
-
     public Player getMin(Player current) {
         if (current.getLeft() == null) {
             return current;
@@ -122,26 +112,97 @@ public class PlayerManager {
     }
 
     public void triggerInorder() {
-        inorder(scoreRoot,0);
+        inorder(scoreRoot);
     }
 
-    public void inorder(Player playerScore,int tries) {
-
+    public void inorder(Player playerScore) {
         if (playerScore == null) {
             return;
         }
-
-        inorder(playerScore.getScoreLess(),tries);
-        if(tries<5) {
-            tries++;
-            playerScore.setPlacement(tries);
-            playersScoreArray.add(playerScore);
-        }
-        inorder(playerScore.getScorePlus(),tries);
+        inorder(playerScore.getScorePlus());
+        playersScoreArray.add(playerScore);
+        inorder(playerScore.getScoreLess());
     }
-
 
     public ArrayList<Player> getPlayers() {
         return playersScoreArray;
+    }
+
+    public boolean savePlayerName(){
+        try{
+            File file = new File("src/data/playersName.txt");
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream output = new ObjectOutputStream(fos);
+            output.writeObject(this.root);
+            output.close();
+
+            return true;
+        } catch (Exception ex){
+            ex.printStackTrace();
+
+            return false;
+        }
+    }
+
+    public Player loadPlayerName(){
+        try {
+            File file = new File("src/data/playersName.txt");
+            FileInputStream fis = new FileInputStream(file);
+            ObjectInputStream input = new ObjectInputStream(fis);
+            Player root = (Player) input.readObject();
+
+            return root;
+        } catch (Exception ex){
+            ex.printStackTrace();
+
+            return null;
+        }
+    }
+
+    public boolean savePlayerScore(){
+        try{
+            File file = new File("src/data/playersScore.txt");
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream output = new ObjectOutputStream(fos);
+            output.writeObject(this.scoreRoot);
+            output.close();
+
+            return true;
+        } catch (Exception ex){
+            ex.printStackTrace();
+
+            return false;
+        }
+    }
+
+    public Player loadPlayerScore(){
+        try{
+            File file = new File("src/data/playersScore.txt");
+            FileInputStream fis = new FileInputStream(file);
+            ObjectInputStream input = new ObjectInputStream(fis);
+            Player scoreRoot = (Player) input.readObject();
+
+            return scoreRoot;
+        } catch (Exception ex){
+            ex.printStackTrace();
+
+            return null;
+        }
+    }
+
+    public Player getRoot() {
+        return root;
+    }
+
+    public Player getScoreRoot() {
+        return scoreRoot;
+    }
+
+    public void setRoot(Player root) {
+        this.root = root;
+    }
+
+    public void setScoreRoot(Player scoreRoot) {
+        this.scoreRoot = scoreRoot;
     }
 }

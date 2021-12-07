@@ -1,69 +1,59 @@
 package model;
 
-import javafx.scene.control.Alert;
+import java.io.Serializable;
 
-public class Player {
+public class Player implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String nickname;
     private int score;
-    private int placement;
     private Player right;
     private Player left;
-
     private Player scorePlus;
     private Player scoreLess;
 
-    public Player(String nickname, int score, int placement) {
+    public Player(String nickname, int score) {
         this.nickname = nickname;
         this.score = score;
-        this.placement = placement;
     }
 
-    public boolean insert(Player newProgrammer){
-
+    public void insert(Player newProgrammer){
         if (newProgrammer.getNickname().compareTo(nickname) < 0) {
             if (this.left == null) {
                 this.left = newProgrammer;
             } else {
                 this.left.insert(newProgrammer);
             }
-
         } else if (newProgrammer.getNickname().compareTo(nickname) > 0) {
-
             if (this.right == null) {
                 this.right = newProgrammer;
             } else {
                 this.right.insert(newProgrammer);
             }
-
-        } else {
-            return false;
         }
-
-        return true;
     }
 
-    public boolean insertByScore(Player newProgrammer){
-
-        if (newProgrammer.getScore() < score) {
-            if (this.left == null) {
-                this.left = newProgrammer;
+    public void insertByScore(Player player){
+        if (player.getScore() < score) {
+            if (this.scoreLess == null) {
+                this.scoreLess = player;
             } else {
-                this.left.insert(newProgrammer);
+                this.scoreLess.insertByScore(player);
             }
-
-        } else if (newProgrammer.getScore() > score) {
-
-            if (this.right == null) {
-                this.right = newProgrammer;
+        } else if (player.getScore() > score) {
+            if (this.scorePlus == null) {
+                this.scorePlus = player;
             } else {
-                this.right.insert(newProgrammer);
+                this.scorePlus.insertByScore(player);
             }
-
-        } else {
-            return false;
+        } else if (player.getScore() == score) {
+            if (this.scoreLess == null) {
+                this.scoreLess = player;
+            } else {
+                this.scoreLess.insertByScore(player);
+            }
         }
-
-        return true;
     }
 
     public Player getRight() {
@@ -96,14 +86,6 @@ public class Player {
 
     public void setScore(int score) {
         this.score = score;
-    }
-
-    public int getPlacement() {
-        return placement;
-    }
-
-    public void setPlacement(int placement) {
-        this.placement = placement;
     }
 
     public Player getScorePlus() {
